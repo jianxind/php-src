@@ -212,6 +212,16 @@ static zend_always_inline int zend_cpu_supports_avx512_vbmi() {
 	return zend_cpu_supports_avx512() && __builtin_cpu_supports("avx512vbmi");
 }
 #endif
+
+#if PHP_HAVE_AVX512_VPCLMULQDQ_SUPPORTS
+ZEND_NO_SANITIZE_ADDRESS
+static zend_always_inline int zend_cpu_supports_avx512_vpclmulqdq() {
+#if PHP_HAVE_BUILTIN_CPU_INIT
+	__builtin_cpu_init();
+#endif
+	return zend_cpu_supports_avx512() && __builtin_cpu_supports("vpclmulqdq");
+}
+#endif
 #else
 
 static zend_always_inline int zend_cpu_supports_sse2() {
@@ -253,6 +263,11 @@ static zend_always_inline int zend_cpu_supports_avx512() {
 
 static zend_always_inline int zend_cpu_supports_avx512_vbmi() {
 	/* TODO: avx512_vbmi use ECX of cpuid 7 */
+	return 0;
+}
+
+static zend_always_inline int zend_cpu_supports_avx512_vpclmuqdq() {
+	/* TODO: avx512_vpclmulqdq use ECX of cpuid 7 */
 	return 0;
 }
 #endif
